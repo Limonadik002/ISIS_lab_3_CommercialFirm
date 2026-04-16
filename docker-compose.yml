@@ -21,6 +21,8 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: commercialfirm
+    ports:
+    - "3307:3306" 
     volumes:
       - db_data:/var/lib/mysql
       - ./dump.sql:/docker-entrypoint-initdb.d/dump.sql
