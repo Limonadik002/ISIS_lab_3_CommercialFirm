@@ -10,15 +10,13 @@ const SuppliersModule = {
         await this.loadTable();
         document.getElementById('addBtn').onclick = () => this.showForm();
     },
-
     async loadTable() {
         const list = await API.suppliers.getAll();
         let html = `<table class="table table-bordered"><thead class="table-dark"><tr>
-            <th>ID</th><th>Название</th><th>Адрес</th><th>Действия</th>
+            <th>Название</th><th>Адрес</th><th>Действия</th>
         </tr></thead><tbody>`;
         for (const s of list) {
             html += `<tr>
-                <td>${s.Supplier_ID}</td>
                 <td>${this.escape(s.Name)}</td>
                 <td>${this.escape(s.Address)}</td>
                 <td>
@@ -32,7 +30,6 @@ const SuppliersModule = {
         document.querySelectorAll('.editBtn').forEach(btn => btn.onclick = () => this.showForm(btn.dataset.id));
         document.querySelectorAll('.deleteBtn').forEach(btn => btn.onclick = () => this.deleteItem(btn.dataset.id));
     },
-
     async showForm(id = null) {
         const isEdit = !!id;
         let data = {};
@@ -74,13 +71,11 @@ const SuppliersModule = {
             await this.loadTable();
         };
     },
-
     async deleteItem(id) {
         if (confirm('Удалить поставщика?')) {
             await API.suppliers.delete(id);
             await this.loadTable();
         }
     },
-
     escape(str) { return !str ? '' : str.replace(/[&<>]/g, m => m === '&' ? '&amp;' : m === '<' ? '&lt;' : '&gt;'); }
 };

@@ -10,15 +10,13 @@ const DealsModule = {
         await this.loadTable();
         document.getElementById('addBtn').onclick = () => this.showForm();
     },
-
     async loadTable() {
         const list = await API.deals.getAll();
         let html = `<table class="table table-bordered"><thead class="table-dark"><tr>
-            <th>ID</th><th>Клиент</th><th>Сотрудник</th><th>Статус</th><th>Дата</th><th>Действия</th>
+            <th>Клиент</th><th>Сотрудник</th><th>Статус</th><th>Дата</th><th>Действия</th>
         </tr></thead><tbody>`;
         for (const d of list) {
             html += `<tr>
-                <td>${d.Deal_ID}</td>
                 <td>${this.escape(d.ClientName)}</td>
                 <td>${this.escape(d.EmployeeName)}</td>
                 <td>${d.OrderStatus == 1 ? 'Завершена' : 'Ожидает'}</td>
@@ -34,7 +32,6 @@ const DealsModule = {
         document.querySelectorAll('.editBtn').forEach(btn => btn.onclick = () => this.showForm(btn.dataset.id));
         document.querySelectorAll('.deleteBtn').forEach(btn => btn.onclick = () => this.deleteItem(btn.dataset.id));
     },
-
     async showForm(id = null) {
         const isEdit = !!id;
         let data = {};
@@ -90,13 +87,11 @@ const DealsModule = {
             await this.loadTable();
         };
     },
-
     async deleteItem(id) {
         if (confirm('Удалить сделку?')) {
             await API.deals.delete(id);
             await this.loadTable();
         }
     },
-
     escape(str) { return !str ? '' : str.replace(/[&<>]/g, m => m === '&' ? '&amp;' : m === '<' ? '&lt;' : '&gt;'); }
 };

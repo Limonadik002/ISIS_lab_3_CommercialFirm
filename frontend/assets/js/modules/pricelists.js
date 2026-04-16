@@ -10,28 +10,26 @@ const PricelistsModule = {
         await this.loadTable();
         document.getElementById('addBtn').onclick = () => this.showForm();
     },
-
     async loadTable() {
         const list = await API.pricelists.getAll();
         let html = `<table class="table table-bordered"><thead class="table-dark"><tr>
-            <th>ID</th><th>Цена, у.е.</th><th>Действия</th>
+            <th>Цена, у.е.</th><th>Модель</th><th>Действия</th>
         </tr></thead><tbody>`;
         for (const p of list) {
             html += `<tr>
-                <td>${p.PriceList_ID}</td>
                 <td>${Number(p.Price).toFixed(2)}</td>
+                <td>${this.escape(p.Model_name || '—')}</td>
                 <td>
                     <button class="btn btn-sm btn-warning editBtn" data-id="${p.PriceList_ID}">✏️</button>
                     <button class="btn btn-sm btn-danger deleteBtn" data-id="${p.PriceList_ID}">🗑️</button>
                 </td>
             </tr>`;
         }
-        html += `</tbody><table>`;
+        html += `</tbody></table>`;
         document.getElementById('tableContainer').innerHTML = html;
         document.querySelectorAll('.editBtn').forEach(btn => btn.onclick = () => this.showForm(btn.dataset.id));
         document.querySelectorAll('.deleteBtn').forEach(btn => btn.onclick = () => this.deleteItem(btn.dataset.id));
     },
-
     async showForm(id = null) {
         const isEdit = !!id;
         let data = {};
@@ -69,13 +67,11 @@ const PricelistsModule = {
             await this.loadTable();
         };
     },
-
     async deleteItem(id) {
         if (confirm('Удалить позицию прайс-листа?')) {
             await API.pricelists.delete(id);
             await this.loadTable();
         }
     },
-
     escape(str) { return !str ? '' : str; }
 };

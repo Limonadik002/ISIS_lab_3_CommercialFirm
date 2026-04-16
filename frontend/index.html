@@ -2,29 +2,50 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Коммерческая фирма</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Коммерческая фирма — Автосалон</title>
+    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Собственные стили -->
+    <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <!-- Красивая шапка с градиентом и иконками -->
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
         <div class="container">
-            <a class="navbar-brand" href="#">Коммерческая фирма</a>
-            <div class="navbar-nav">
-                <a class="nav-link" href="#" data-page="clients">Клиенты</a>
-                <a class="nav-link" href="#" data-page="employees">Сотрудники</a>
-                <a class="nav-link" href="#" data-page="suppliers">Поставщики</a>
-                <a class="nav-link" href="#" data-page="pricelists">Прайс-лист</a>
-                <a class="nav-link" href="#" data-page="models">Модели авто</a>
-                <a class="nav-link" href="#" data-page="deals">Сделки</a>
-                <a class="nav-link" href="#" data-page="supplieroffers">Предложения поставщиков</a>
-                <a class="nav-link" href="#" data-page="modelsindeal">Позиции в сделках</a>
-                <a class="nav-link" href="#" data-page="report">Отчёт</a>
+            <a class="navbar-brand" href="#">
+                <i class="bi bi-car-front-fill"></i> АвтоМир
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="#" data-page="clients"><i class="bi bi-people-fill"></i> Клиенты</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#" data-page="employees"><i class="bi bi-person-badge-fill"></i> Сотрудники</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#" data-page="suppliers"><i class="bi bi-truck"></i> Поставщики</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#" data-page="pricelists"><i class="bi bi-tags-fill"></i> Прайс-лист</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#" data-page="models"><i class="bi bi-car-front"></i> Модели</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#" data-page="deals"><i class="bi bi-file-check-fill"></i> Сделки</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#" data-page="supplieroffers"><i class="bi bi-box-seam"></i> Предложения</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#" data-page="modelsindeal"><i class="bi bi-list-ul"></i> Позиции</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#" data-page="report"><i class="bi bi-graph-up"></i> Отчёт</a></li>
+                </ul>
             </div>
         </div>
     </nav>
-    <div class="container mt-4" id="app"></div>
 
-    <!-- Bootstrap JS должен быть первым -->
+    <div class="container mt-4" id="app">
+        <div class="text-center">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Загрузка...</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS (должен быть первым) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="assets/js/api.js"></script>
     <script src="assets/js/modules/clients.js"></script>

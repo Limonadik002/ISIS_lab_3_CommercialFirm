@@ -21,7 +21,6 @@ const ReportModule = {
         await this.loadFilters();
         document.getElementById('generateBtn').onclick = () => this.generateReport();
     },
-
     async loadFilters() {
         const data = await API.report.get();
         const monthSelect = document.getElementById('monthSelect');
@@ -42,7 +41,6 @@ const ReportModule = {
         monthSelect.value = now.getMonth() + 1;
         yearSelect.value = now.getFullYear();
     },
-
     async generateReport() {
         const month = document.getElementById('monthSelect').value;
         const year = document.getElementById('yearSelect').value;
@@ -78,7 +76,6 @@ const ReportModule = {
         html += '</tbody></table>';
         document.getElementById('reportContainer').innerHTML = html;
     },
-
     escape(str) {
         if (!str) return '';
         return str.replace(/[&<>]/g, m => m === '&' ? '&amp;' : m === '<' ? '&lt;' : '&gt;');

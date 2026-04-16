@@ -10,15 +10,13 @@ const SupplierOffersModule = {
         await this.loadTable();
         document.getElementById('addBtn').onclick = () => this.showForm();
     },
-
     async loadTable() {
         const list = await API.supplieroffers.getAll();
         let html = `<table class="table table-bordered"><thead class="table-dark"><tr>
-            <th>ID</th><th>Модель</th><th>Поставщик</th><th>Действия</th>
-        </table></thead><tbody>`;
+            <th>Модель</th><th>Поставщик</th><th>Действия</th>
+        </tr></thead><tbody>`;
         for (const item of list) {
             html += `<tr>
-                <td>${item.Offer_ID}</td>
                 <td>${this.escape(item.Model_name)}</td>
                 <td>${this.escape(item.SupplierName)}</td>
                 <td>
@@ -32,7 +30,6 @@ const SupplierOffersModule = {
         document.querySelectorAll('.editBtn').forEach(btn => btn.onclick = () => this.showForm(btn.dataset.id));
         document.querySelectorAll('.deleteBtn').forEach(btn => btn.onclick = () => this.deleteItem(btn.dataset.id));
     },
-
     async showForm(id = null) {
         const isEdit = !!id;
         let data = {};
@@ -79,13 +76,11 @@ const SupplierOffersModule = {
             await this.loadTable();
         };
     },
-
     async deleteItem(id) {
         if (confirm('Удалить предложение поставщика?')) {
             await API.supplieroffers.delete(id);
             await this.loadTable();
         }
     },
-
     escape(str) { return !str ? '' : str.replace(/[&<>]/g, m => m === '&' ? '&amp;' : m === '<' ? '&lt;' : '&gt;'); }
 };

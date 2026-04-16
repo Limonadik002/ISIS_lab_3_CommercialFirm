@@ -10,15 +10,13 @@ const CarModelsModule = {
         await this.loadTable();
         document.getElementById('addBtn').onclick = () => this.showForm();
     },
-
     async loadTable() {
         const list = await API.models.getAll();
         let html = `<table class="table table-bordered"><thead class="table-dark"><tr>
-            <th>ID</th><th>Модель</th><th>Цвет</th><th>Цена</th><th>КПП</th><th>Топливо</th><th>Действия</th>
+            <th>Модель</th><th>Цвет</th><th>Цена</th><th>КПП</th><th>Топливо</th><th>Действия</th>
         </tr></thead><tbody>`;
         for (const m of list) {
             html += `<tr>
-                <td>${m.Model_ID}</td>
                 <td>${this.escape(m.Model_name)}</td>
                 <td>${this.escape(m.Color)}</td>
                 <td>${Number(m.Price).toFixed(2)}</td>
@@ -35,7 +33,6 @@ const CarModelsModule = {
         document.querySelectorAll('.editBtn').forEach(btn => btn.onclick = () => this.showForm(btn.dataset.id));
         document.querySelectorAll('.deleteBtn').forEach(btn => btn.onclick = () => this.deleteItem(btn.dataset.id));
     },
-
     async showForm(id = null) {
         const isEdit = !!id;
         let data = {};
@@ -90,13 +87,11 @@ const CarModelsModule = {
             await this.loadTable();
         };
     },
-
     async deleteItem(id) {
         if (confirm('Удалить модель?')) {
             await API.models.delete(id);
             await this.loadTable();
         }
     },
-
     escape(str) { return !str ? '' : str.replace(/[&<>]/g, m => m === '&' ? '&amp;' : m === '<' ? '&lt;' : '&gt;'); }
 };

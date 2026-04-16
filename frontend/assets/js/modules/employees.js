@@ -13,12 +13,15 @@ const EmployeesModule = {
 
     async loadTable() {
         const list = await API.employees.getAll();
-        let html = `<table class="table table-bordered"><thead class="table-dark"><tr>
-            <th>ID</th><th>Фамилия</th><th>Имя</th><th>Отчество</th><th>Телефон</th><th>Действия</th>
+        let html = `<table class="table table-bordered"><thead class="table-dark">
+            <th>Фамилия</th>
+            <th>Имя</th>
+            <th>Отчество</th>
+            <th>Телефон</th>
+            <th>Действия</th>
         </tr></thead><tbody>`;
         for (const e of list) {
             html += `<tr>
-                <td>${e.Employee_ID}</td>
                 <td>${this.escape(e.LastName)}</td>
                 <td>${this.escape(e.FirstName)}</td>
                 <td>${this.escape(e.MiddleName || '—')}</td>
@@ -26,13 +29,18 @@ const EmployeesModule = {
                 <td>
                     <button class="btn btn-sm btn-warning editBtn" data-id="${e.Employee_ID}">✏️</button>
                     <button class="btn btn-sm btn-danger deleteBtn" data-id="${e.Employee_ID}">🗑️</button>
-                </td>
+                 </td>
             </tr>`;
         }
         html += `</tbody></table>`;
         document.getElementById('tableContainer').innerHTML = html;
-        document.querySelectorAll('.editBtn').forEach(btn => btn.onclick = () => this.showForm(btn.dataset.id));
-        document.querySelectorAll('.deleteBtn').forEach(btn => btn.onclick = () => this.deleteItem(btn.dataset.id));
+
+        document.querySelectorAll('.editBtn').forEach(btn => {
+            btn.onclick = () => this.showForm(btn.dataset.id);
+        });
+        document.querySelectorAll('.deleteBtn').forEach(btn => {
+            btn.onclick = () => this.deleteItem(btn.dataset.id);
+        });
     },
 
     async showForm(id = null) {
@@ -74,8 +82,11 @@ const EmployeesModule = {
                 MiddleName: form.MiddleName.value,
                 Phone: form.Phone.value
             };
-            if (isEdit) await API.employees.update(id, formData);
-            else await API.employees.add(formData);
+            if (isEdit) {
+                await API.employees.update(id, formData);
+            } else {
+                await API.employees.add(formData);
+            }
             modal.hide();
             await this.loadTable();
         };
@@ -88,5 +99,13 @@ const EmployeesModule = {
         }
     },
 
-    escape(str) { return !str ? '' : str.replace(/[&<>]/g, m => m === '&' ? '&amp;' : m === '<' ? '&lt;' : '&gt;'); }
+    escape(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
 };

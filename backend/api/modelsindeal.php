@@ -5,7 +5,10 @@ $method = $_SERVER['REQUEST_METHOD'];
 $id = $_GET['id'] ?? null;
 
 if ($method === 'GET' && !$id) {
-    $sql = "SELECT mid.*, m.Model_name, d.Deal_ID,
+    $sql = "SELECT mid.*, 
+                   m.Model_name, 
+                   d.Deal_ID,
+                   d.OrderDate,
                    CONCAT(c.LastName,' ',c.FirstName) AS ClientName
             FROM modelsindeal mid
             JOIN model m ON mid.Model_ID = m.Model_ID
@@ -18,11 +21,9 @@ elseif ($method === 'GET' && $id) {
     $data = fetchOne("SELECT * FROM modelsindeal WHERE Position_ID = ? AND Deleted = 0", 'i', [$id]);
     sendJson($data ?: ['error' => 'Not found'], $data ? 200 : 404);
 }
-// GET options for models
 elseif ($method === 'GET' && isset($_GET['options']) && $_GET['options'] === 'models') {
     sendJson(fetchAll("SELECT Model_ID, Model_name FROM model WHERE Deleted = 0"));
 }
-// GET options for deals
 elseif ($method === 'GET' && isset($_GET['options']) && $_GET['options'] === 'deals') {
     $sql = "SELECT d.Deal_ID, CONCAT('Deal #', d.Deal_ID, ' - ', c.LastName, ' ', c.FirstName) AS Description
             FROM deal d
