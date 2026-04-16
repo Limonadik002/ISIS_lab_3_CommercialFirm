@@ -2,6 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Коммерческая фирма</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
@@ -11,15 +12,31 @@
             <a class="navbar-brand" href="#">Коммерческая фирма</a>
             <div class="navbar-nav">
                 <a class="nav-link" href="#" data-page="clients">Клиенты</a>
-                <!-- далее добавим другие пункты -->
+                <a class="nav-link" href="#" data-page="employees">Сотрудники</a>
+                <a class="nav-link" href="#" data-page="suppliers">Поставщики</a>
+                <a class="nav-link" href="#" data-page="pricelists">Прайс-лист</a>
+                <a class="nav-link" href="#" data-page="models">Модели авто</a>
+                <a class="nav-link" href="#" data-page="deals">Сделки</a>
+                <a class="nav-link" href="#" data-page="supplieroffers">Предложения поставщиков</a>
+                <a class="nav-link" href="#" data-page="modelsindeal">Позиции в сделках</a>
+                <a class="nav-link" href="#" data-page="report">Отчёт</a>
             </div>
         </div>
     </nav>
     <div class="container mt-4" id="app">
         <div class="text-center"><div class="spinner-border"></div></div>
     </div>
+
     <script src="assets/js/api.js"></script>
     <script src="assets/js/modules/clients.js"></script>
+    <script src="assets/js/modules/employees.js"></script>
+    <script src="assets/js/modules/suppliers.js"></script>
+    <script src="assets/js/modules/pricelists.js"></script>
+    <script src="assets/js/modules/models.js"></script>
+    <script src="assets/js/modules/deals.js"></script>
+    <script src="assets/js/modules/supplieroffers.js"></script>
+    <script src="assets/js/modules/modelsindeal.js"></script>
+    <script src="assets/js/modules/report.js"></script>
     <script src="assets/js/app.js"></script>
 </body>
 </html>

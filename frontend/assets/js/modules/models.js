@@ -1,0 +1,102 @@
+const CarModelsModule = {
+    async render() {
+        const app = document.getElementById('app');
+        app.innerHTML = `
+            <h2>Модели автомобилей</h2>
+            <button class="btn btn-primary mb-3" id="addBtn">+ Добавить</button>
+            <div id="tableContainer"><div class="spinner-border"></div></div>
+            <div id="modalContainer"></div>
+        `;
+        await this.loadTable();
+        document.getElementById('addBtn').onclick = () => this.showForm();
+    },
+
+    async loadTable() {
+        const list = await API.models.getAll();
+        let html = `<table class="table table-bordered"><thead class="table-dark"><tr>
+            <th>ID</th><th>Модель</th><th>Цвет</th><th>Цена</th><th>КПП</th><th>Топливо</th><th>Действия</th>
+        </tr></thead><tbody>`;
+        for (const m of list) {
+            html += `<tr>
+                <td>${m.Model_ID}</td>
+                <td>${this.escape(m.Model_name)}</td>
+                <td>${this.escape(m.Color)}</td>
+                <td>${Number(m.Price).toFixed(2)}</td>
+                <td>${this.escape(m.Transmission)}</td>
+                <td>${this.escape(m.FuelType)}</td>
+                <td>
+                    <button class="btn btn-sm btn-warning editBtn" data-id="${m.Model_ID}">✏️</button>
+                    <button class="btn btn-sm btn-danger deleteBtn" data-id="${m.Model_ID}">🗑️</button>
+                </td>
+            </tr>`;
+        }
+        html += `</tbody></table>`;
+        document.getElementById('tableContainer').innerHTML = html;
+        document.querySelectorAll('.editBtn').forEach(btn => btn.onclick = () => this.showForm(btn.dataset.id));
+        document.querySelectorAll('.deleteBtn').forEach(btn => btn.onclick = () => this.deleteItem(btn.dataset.id));
+    },
+
+    async showForm(id = null) {
+        const isEdit = !!id;
+        let data = {};
+        let pricelistOptions = [];
+        if (isEdit) data = await API.models.get(id);
+        pricelistOptions = await API.models.getPricelistOptions();
+        const priceSelect = pricelistOptions.map(opt => `<option value="${opt.PriceList_ID}" ${data.PriceList_ID == opt.PriceList_ID ? 'selected' : ''}>${Number(opt.Price).toFixed(2)} у.е.</option>`).join('');
+        const modalHtml = `
+            <div class="modal fade" id="modelModal" tabindex="-1">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5>${isEdit ? 'Редактировать' : 'Добавить'} модель</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="modelForm">
+                                <div class="mb-2"><label>Модель *</label><input name="Model_name" class="form-control" value="${this.escape(data.Model_name)}" required></div>
+                                <div class="mb-2"><label>Цвет *</label><input name="Color" class="form-control" value="${this.escape(data.Color)}" required></div>
+                                <div class="mb-2"><label>Цена (из прайс-листа) *</label><select name="PriceList_ID" class="form-select">${priceSelect}</select></div>
+                                <div class="mb-2"><label>Мощность (л.с.)</label><input type="number" name="Horsepower" class="form-control" value="${data.Horsepower || ''}"></div>
+                                <div class="mb-2"><label>Вес (кг)</label><input type="number" name="Weight" class="form-control" value="${data.Weight || ''}"></div>
+                                <div class="mb-2"><label>КПП *</label><input name="Transmission" class="form-control" value="${this.escape(data.Transmission)}" required></div>
+                                <div class="mb-2"><label>Топливо *</label><input name="FuelType" class="form-control" value="${this.escape(data.FuelType)}" required></div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                            <button class="btn btn-primary" id="saveBtn">Сохранить</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        document.getElementById('modalContainer').innerHTML = modalHtml;
+        const modal = new bootstrap.Modal(document.getElementById('modelModal'));
+        modal.show();
+        document.getElementById('saveBtn').onclick = async () => {
+            const form = document.getElementById('modelForm');
+            const formData = {
+                Model_name: form.Model_name.value,
+                Color: form.Color.value,
+                PriceList_ID: form.PriceList_ID.value,
+                Horsepower: form.Horsepower.value || null,
+                Weight: form.Weight.value || null,
+                Transmission: form.Transmission.value,
+                FuelType: form.FuelType.value
+            };
+            if (isEdit) await API.models.update(id, formData);
+            else await API.models.add(formData);
+            modal.hide();
+            await this.loadTable();
+        };
+    },
+
+    async deleteItem(id) {
+        if (confirm('Удалить модель?')) {
+            await API.models.delete(id);
+            await this.loadTable();
+        }
+    },
+
+    escape(str) { return !str ? '' : str.replace(/[&<>]/g, m => m === '&' ? '&amp;' : m === '<' ? '&lt;' : '&gt;'); }
+};

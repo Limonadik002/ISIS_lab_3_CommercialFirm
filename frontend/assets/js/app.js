@@ -1,6 +1,14 @@
 document.addEventListener('DOMContentLoaded', () => {
     const pages = {
-        clients: () => ClientsModule.render()
+        clients: () => ClientsModule.render(),
+        employees: () => EmployeesModule.render(),
+        suppliers: () => SuppliersModule.render(),
+        pricelists: () => PricelistsModule.render(),
+        models: () => CarModelsModule.render(),
+        deals: () => DealsModule.render(),
+        supplieroffers: () => SupplierOffersModule.render(),
+        modelsindeal: () => ModelsInDealModule.render(),
+        report: () => ReportModule.render()
     };
 
     function loadPage(page) {

@@ -30,6 +30,7 @@ CREATE TABLE `client` (
   `Phone` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
   `Email` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `TotalCarsPurchased` int DEFAULT '0',
+  `Deleted` tinyint(1) DEFAULT '0'
   PRIMARY KEY (`Client_ID`),
   UNIQUE KEY `Phone` (`Phone`),
   UNIQUE KEY `Email` (`Email`)
@@ -157,6 +158,7 @@ CREATE TABLE `employees` (
   `FirstName` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
   `MiddleName` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `Phone` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `Deleted` tinyint(1) DEFAULT '0',
   PRIMARY KEY (`Employee_ID`),
   UNIQUE KEY `Phone` (`Phone`)
 ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

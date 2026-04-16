@@ -1,8 +1,8 @@
-const ClientsModule = {
+const EmployeesModule = {
     async render() {
         const app = document.getElementById('app');
         app.innerHTML = `
-            <h2>Клиенты</h2>
+            <h2>Сотрудники</h2>
             <button class="btn btn-primary mb-3" id="addBtn">+ Добавить</button>
             <div id="tableContainer"><div class="spinner-border"></div></div>
             <div id="modalContainer"></div>
@@ -12,21 +12,20 @@ const ClientsModule = {
     },
 
     async loadTable() {
-        const list = await API.clients.getAll();
+        const list = await API.employees.getAll();
         let html = `<table class="table table-bordered"><thead class="table-dark"><tr>
-            <th>ID</th><th>Фамилия</th><th>Имя</th><th>Отчество</th><th>Телефон</th><th>Email</th><th>Действия</th>
-        </table></thead><tbody>`;
-        for (const c of list) {
+            <th>ID</th><th>Фамилия</th><th>Имя</th><th>Отчество</th><th>Телефон</th><th>Действия</th>
+        </tr></thead><tbody>`;
+        for (const e of list) {
             html += `<tr>
-                <td>${c.Client_ID}</td>
-                <td>${this.escape(c.LastName)}</td>
-                <td>${this.escape(c.FirstName)}</td>
-                <td>${this.escape(c.MiddleName || '—')}</td>
-                <td>${this.escape(c.Phone)}</td>
-                <td>${this.escape(c.Email || '—')}</td>
+                <td>${e.Employee_ID}</td>
+                <td>${this.escape(e.LastName)}</td>
+                <td>${this.escape(e.FirstName)}</td>
+                <td>${this.escape(e.MiddleName || '—')}</td>
+                <td>${this.escape(e.Phone)}</td>
                 <td>
-                    <button class="btn btn-sm btn-warning editBtn" data-id="${c.Client_ID}">✏️</button>
-                    <button class="btn btn-sm btn-danger deleteBtn" data-id="${c.Client_ID}">🗑️</button>
+                    <button class="btn btn-sm btn-warning editBtn" data-id="${e.Employee_ID}">✏️</button>
+                    <button class="btn btn-sm btn-danger deleteBtn" data-id="${e.Employee_ID}">🗑️</button>
                 </td>
             </tr>`;
         }
@@ -39,22 +38,21 @@ const ClientsModule = {
     async showForm(id = null) {
         const isEdit = !!id;
         let data = {};
-        if (isEdit) data = await API.clients.get(id);
+        if (isEdit) data = await API.employees.get(id);
         const modalHtml = `
-            <div class="modal fade" id="clientModal" tabindex="-1">
+            <div class="modal fade" id="employeeModal" tabindex="-1">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5>${isEdit ? 'Редактировать' : 'Добавить'} клиента</h5>
+                            <h5>${isEdit ? 'Редактировать' : 'Добавить'} сотрудника</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                         </div>
                         <div class="modal-body">
-                            <form id="clientForm">
+                            <form id="employeeForm">
                                 <div class="mb-2"><label>Фамилия *</label><input name="LastName" class="form-control" value="${this.escape(data.LastName)}" required></div>
                                 <div class="mb-2"><label>Имя *</label><input name="FirstName" class="form-control" value="${this.escape(data.FirstName)}" required></div>
                                 <div class="mb-2"><label>Отчество</label><input name="MiddleName" class="form-control" value="${this.escape(data.MiddleName)}"></div>
                                 <div class="mb-2"><label>Телефон *</label><input name="Phone" class="form-control" value="${this.escape(data.Phone)}" required></div>
-                                <div class="mb-2"><label>Email</label><input name="Email" class="form-control" value="${this.escape(data.Email)}"></div>
                             </form>
                         </div>
                         <div class="modal-footer">
@@ -66,33 +64,29 @@ const ClientsModule = {
             </div>
         `;
         document.getElementById('modalContainer').innerHTML = modalHtml;
-        const modal = new bootstrap.Modal(document.getElementById('clientModal'));
+        const modal = new bootstrap.Modal(document.getElementById('employeeModal'));
         modal.show();
         document.getElementById('saveBtn').onclick = async () => {
-            const form = document.getElementById('clientForm');
+            const form = document.getElementById('employeeForm');
             const formData = {
                 LastName: form.LastName.value,
                 FirstName: form.FirstName.value,
                 MiddleName: form.MiddleName.value,
-                Phone: form.Phone.value,
-                Email: form.Email.value
+                Phone: form.Phone.value
             };
-            if (isEdit) await API.clients.update(id, formData);
-            else await API.clients.add(formData);
+            if (isEdit) await API.employees.update(id, formData);
+            else await API.employees.add(formData);
             modal.hide();
             await this.loadTable();
         };
     },
 
     async deleteItem(id) {
-        if (confirm('Удалить клиента?')) {
-            await API.clients.delete(id);
+        if (confirm('Удалить сотрудника?')) {
+            await API.employees.delete(id);
             await this.loadTable();
         }
     },
 
-    escape(str) {
-        if (!str) return '';
-        return str.replace(/[&<>]/g, m => m === '&' ? '&amp;' : m === '<' ? '&lt;' : m === '>' ? '&gt;' : m);
-    }
+    escape(str) { return !str ? '' : str.replace(/[&<>]/g, m => m === '&' ? '&amp;' : m === '<' ? '&lt;' : '&gt;'); }
 };
