@@ -10,13 +10,15 @@ const ClientsModule = {
         await this.loadTable();
         document.getElementById('addBtn').onclick = () => this.showForm();
     },
+
     async loadTable() {
         const list = await API.clients.getAll();
         let html = `<table class="table table-bordered"><thead class="table-dark"><tr>
-            <th>Фамилия</th><th>Имя</th><th>Отчество</th><th>Телефон</th><th>Email</th><th>Действия</th>
-        </tr></thead><tbody>`;
+            <th>ID</th><th>Фамилия</th><th>Имя</th><th>Отчество</th><th>Телефон</th><th>Email</th><th>Действия</th>
+        </table></thead><tbody>`;
         for (const c of list) {
             html += `<tr>
+                <td>${c.Client_ID}</td>
                 <td>${this.escape(c.LastName)}</td>
                 <td>${this.escape(c.FirstName)}</td>
                 <td>${this.escape(c.MiddleName || '—')}</td>
@@ -33,6 +35,7 @@ const ClientsModule = {
         document.querySelectorAll('.editBtn').forEach(btn => btn.onclick = () => this.showForm(btn.dataset.id));
         document.querySelectorAll('.deleteBtn').forEach(btn => btn.onclick = () => this.deleteItem(btn.dataset.id));
     },
+
     async showForm(id = null) {
         const isEdit = !!id;
         let data = {};
@@ -80,14 +83,16 @@ const ClientsModule = {
             await this.loadTable();
         };
     },
+
     async deleteItem(id) {
         if (confirm('Удалить клиента?')) {
             await API.clients.delete(id);
             await this.loadTable();
         }
     },
+
     escape(str) {
         if (!str) return '';
-        return str.replace(/[&<>]/g, m => m === '&' ? '&amp;' : m === '<' ? '&lt;' : '&gt;');
+        return str.replace(/[&<>]/g, m => m === '&' ? '&amp;' : m === '<' ? '&lt;' : m === '>' ? '&gt;' : m);
     }
 };

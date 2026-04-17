@@ -10,10 +10,15 @@ const DealsModule = {
         await this.loadTable();
         document.getElementById('addBtn').onclick = () => this.showForm();
     },
+
     async loadTable() {
         const list = await API.deals.getAll();
-        let html = `<table class="table table-bordered"><thead class="table-dark"><tr>
-            <th>Клиент</th><th>Сотрудник</th><th>Статус</th><th>Дата</th><th>Действия</th>
+        let html = `<table class="table table-bordered"><thead class="table-dark">发展
+            <th>Клиент</th>
+            <th>Сотрудник</th>
+            <th>Статус</th>
+            <th>Дата</th>
+            <th>Действия</th>
         </tr></thead><tbody>`;
         for (const d of list) {
             html += `<tr>
@@ -32,15 +37,29 @@ const DealsModule = {
         document.querySelectorAll('.editBtn').forEach(btn => btn.onclick = () => this.showForm(btn.dataset.id));
         document.querySelectorAll('.deleteBtn').forEach(btn => btn.onclick = () => this.deleteItem(btn.dataset.id));
     },
+
     async showForm(id = null) {
         const isEdit = !!id;
         let data = {};
         let clients = [], employees = [];
+
         if (isEdit) data = await API.deals.get(id);
+        // Загружаем списки клиентов и сотрудников
         clients = await API.deals.getClientOptions();
         employees = await API.deals.getEmployeeOptions();
-        const clientSelect = clients.map(c => `<option value="${c.Client_ID}" ${data.Client_ID == c.Client_ID ? 'selected' : ''}>${this.escape(c.Name)}</option>`).join('');
-        const employeeSelect = employees.map(e => `<option value="${e.Employee_ID}" ${data.Employee_ID == e.Employee_ID ? 'selected' : ''}>${this.escape(e.Name)}</option>`).join('');
+
+        // Формируем option'ы для выпадающих списков
+        const clientSelect = clients.map(c => 
+            `<option value="${c.Client_ID}" ${data.Client_ID == c.Client_ID ? 'selected' : ''}>
+                ${this.escape(c.Name)}
+            </option>`
+        ).join('');
+        const employeeSelect = employees.map(e => 
+            `<option value="${e.Employee_ID}" ${data.Employee_ID == e.Employee_ID ? 'selected' : ''}>
+                ${this.escape(e.Name)}
+            </option>`
+        ).join('');
+
         const modalHtml = `
             <div class="modal fade" id="dealModal" tabindex="-1">
                 <div class="modal-dialog">
@@ -51,15 +70,26 @@ const DealsModule = {
                         </div>
                         <div class="modal-body">
                             <form id="dealForm">
-                                <div class="mb-2"><label>Клиент *</label><select name="Client_ID" class="form-select">${clientSelect}</select></div>
-                                <div class="mb-2"><label>Сотрудник *</label><select name="Employee_ID" class="form-select">${employeeSelect}</select></div>
-                                <div class="mb-2"><label>Статус</label>
+                                <div class="mb-2">
+                                    <label>Клиент *</label>
+                                    <select name="Client_ID" class="form-select" required>${clientSelect}</select>
+                                </div>
+                                <div class="mb-2">
+                                    <label>Сотрудник *</label>
+                                    <select name="Employee_ID" class="form-select" required>${employeeSelect}</select>
+                                </div>
+                                <div class="mb-2">
+                                    <label>Статус</label>
                                     <select name="OrderStatus" class="form-select">
                                         <option value="1" ${data.OrderStatus == 1 ? 'selected' : ''}>Завершена</option>
                                         <option value="0" ${data.OrderStatus == 0 ? 'selected' : ''}>Ожидает</option>
                                     </select>
                                 </div>
-                                <div class="mb-2"><label>Дата *</label><input type="date" name="OrderDate" class="form-control" value="${data.OrderDate || new Date().toISOString().slice(0,10)}" required></div>
+                                <div class="mb-2">
+                                    <label>Дата *</label>
+                                    <input type="date" name="OrderDate" class="form-control" 
+                                           value="${data.OrderDate || new Date().toISOString().slice(0,10)}" required>
+                                </div>
                             </form>
                         </div>
                         <div class="modal-footer">
@@ -73,6 +103,7 @@ const DealsModule = {
         document.getElementById('modalContainer').innerHTML = modalHtml;
         const modal = new bootstrap.Modal(document.getElementById('dealModal'));
         modal.show();
+
         document.getElementById('saveBtn').onclick = async () => {
             const form = document.getElementById('dealForm');
             const formData = {
@@ -81,17 +112,25 @@ const DealsModule = {
                 OrderStatus: form.OrderStatus.value,
                 OrderDate: form.OrderDate.value
             };
-            if (isEdit) await API.deals.update(id, formData);
-            else await API.deals.add(formData);
+            if (isEdit) {
+                await API.deals.update(id, formData);
+            } else {
+                await API.deals.add(formData);
+            }
             modal.hide();
             await this.loadTable();
         };
     },
+
     async deleteItem(id) {
         if (confirm('Удалить сделку?')) {
             await API.deals.delete(id);
             await this.loadTable();
         }
     },
-    escape(str) { return !str ? '' : str.replace(/[&<>]/g, m => m === '&' ? '&amp;' : m === '<' ? '&lt;' : '&gt;'); }
+
+    escape(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, m => m === '&' ? '&amp;' : m === '<' ? '&lt;' : '&gt;');
+    }
 };
