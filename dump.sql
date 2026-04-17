@@ -24,17 +24,17 @@ DROP TABLE IF EXISTS `client`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `client` (
   `Client_ID` int NOT NULL AUTO_INCREMENT,
-  `LastName` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `FirstName` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `MiddleName` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `Phone` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `Email` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `LastName` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `FirstName` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `MiddleName` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `Phone` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `Email` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `TotalCarsPurchased` int DEFAULT '0',
-  `Deleted` tinyint(1) DEFAULT '0'
+  `Deleted` tinyint(1) DEFAULT '0',
   PRIMARY KEY (`Client_ID`),
   UNIQUE KEY `Phone` (`Phone`),
   UNIQUE KEY `Email` (`Email`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -43,7 +43,7 @@ CREATE TABLE `client` (
 
 LOCK TABLES `client` WRITE;
 /*!40000 ALTER TABLE `client` DISABLE KEYS */;
-INSERT INTO `client` VALUES (1,'Иванов','Иван','Иванович','+7(901)123-45-67','ivanov.ivan@mail.ru',5),(2,'Петрова','Анна','Сергеевна','+7(902)234-56-78','petrova.anna@yandex.ru',4),(3,'Смирнов','Дмитрий','Алексеевич','+7(903)345-67-89','smirnov.d@bk.ru',3),(4,'Козлова','Елена','Владимировна','+7(904)456-78-90','kozlova.elena@gmail.com',3),(5,'Морозов','Александр','Петрович','+7(905)567-89-01','morozov.a@mail.ru',3),(6,'Волкова','Татьяна','Николаевна','+7(906)678-90-12','volkova.t@yandex.ru',3),(7,'Соколов','Андрей','Викторович','+7(907)789-01-23','sokolov.andrey@bk.ru',2),(8,'Михайлова','Ольга','Дмитриевна','+7(908)890-12-34','mihailova.olga@gmail.com',2),(9,'Новиков','Павел','Сергеевич','+7(909)901-23-45','novikov.pavel@mail.ru',2),(10,'Федорова','Наталья','Игоревна','+7(910)012-34-56','fedorova.n@yandex.ru',3);
+INSERT INTO `client` VALUES (1,'Иванов','Иван','Иванович','+7(901)123-45-67','ivanov.ivan@mail.ru',5,0),(2,'Петрова','Анна','Сергеевна','+7(902)234-56-78','petrova.anna@yandex.ru',4,0),(3,'Смирнов','Дмитрий','Алексеевич','+7(903)345-67-89','smirnov.d@bk.ru',3,0),(4,'Козлова','Елена','Владимировна','+7(904)456-78-90','kozlova.elena@gmail.com',3,0),(5,'Морозов','Александр','Петрович','+7(905)567-89-01','morozov.a@mail.ru',3,0),(6,'Волкова','Татьяна','Николаевна','+7(906)678-90-12','volkova.t@yandex.ru',3,0),(7,'Соколов','Андрей','Викторович','+7(907)789-01-23','sokolov.andrey@bk.ru',2,0),(8,'Михайлова','Ольга','Дмитриевна','+7(908)890-12-34','mihailova.olga@gmail.com',2,0),(9,'Новиков','Павел','Сергеевич','+7(909)901-23-45','novikov.pavel@mail.ru',2,0),(10,'Федорова','Наталья','Игоревна','+7(910)012-34-56','fedorova.n@yandex.ru',3,0),(12,'шушков','димас','серЁжевич','89289095147','stytovdima@yandex.ru',0,1);
 /*!40000 ALTER TABLE `client` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -154,10 +154,10 @@ DROP TABLE IF EXISTS `employees`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `employees` (
   `Employee_ID` int NOT NULL AUTO_INCREMENT,
-  `LastName` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `FirstName` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `MiddleName` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `Phone` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `LastName` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `FirstName` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `MiddleName` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `Phone` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `Deleted` tinyint(1) DEFAULT '0',
   PRIMARY KEY (`Employee_ID`),
   UNIQUE KEY `Phone` (`Phone`)
@@ -170,7 +170,7 @@ CREATE TABLE `employees` (
 
 LOCK TABLES `employees` WRITE;
 /*!40000 ALTER TABLE `employees` DISABLE KEYS */;
-INSERT INTO `employees` VALUES (1,'Сидоров','Петр','Сергеевич','+7(911)123-45-67'),(2,'Кузнецова','Мария','Алексеевна','+7(912)234-56-78'),(3,'Васильев','Игорь','Николаевич','+7(913)345-67-89'),(4,'Попова','Екатерина','Владимировна','+7(914)456-78-90'),(5,'Михайлов','Денис','Олегович','+7(915)567-89-01'),(6,'Алексеева','Светлана','Павловна','+7(916)678-90-12'),(7,'Никитин','Артем','Сергеевич','+7(917)789-01-23');
+INSERT INTO `employees` VALUES (1,'Сидоров','Петр','Сергеевич','+7(911)123-45-67',0),(2,'Кузнецова','Мария','Алексеевна','+7(912)234-56-78',0),(3,'Васильев','Игорь','Николаевич','+7(913)345-67-89',0),(4,'Попова','Екатерина','Владимировна','+7(914)456-78-90',0),(5,'Михайлов','Денис','Олегович','+7(915)567-89-01',0),(6,'Алексеева','Светлана','Павловна','+7(916)678-90-12',0),(7,'Никитин','Артем','Сергеевич','+7(917)789-01-23',0);
 /*!40000 ALTER TABLE `employees` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -184,12 +184,12 @@ DROP TABLE IF EXISTS `model`;
 CREATE TABLE `model` (
   `Model_ID` int NOT NULL AUTO_INCREMENT,
   `PriceList_ID` int NOT NULL,
-  `Color` varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `Model_name` varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `Color` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `Model_name` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `Horsepower` int DEFAULT NULL,
   `Weight` int DEFAULT NULL,
-  `Transmission` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `FuelType` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `Transmission` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `FuelType` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `Deleted` tinyint(1) DEFAULT '0',
   PRIMARY KEY (`Model_ID`),
   UNIQUE KEY `PriceList_ID` (`PriceList_ID`),
@@ -275,8 +275,8 @@ DROP TABLE IF EXISTS `supplier_archive`;
 CREATE TABLE `supplier_archive` (
   `archive_id` int NOT NULL AUTO_INCREMENT,
   `Supplier_ID` int NOT NULL,
-  `Name` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `Address` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `Name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `Address` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `Deleted_Date` datetime DEFAULT NULL,
   `Archived_Date` datetime DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`archive_id`),
@@ -334,8 +334,8 @@ DROP TABLE IF EXISTS `suppliers`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `suppliers` (
   `Supplier_ID` int NOT NULL AUTO_INCREMENT,
-  `Name` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `Address` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `Name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `Address` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `Deleted` tinyint(1) DEFAULT '0',
   `Deleted_Date` datetime DEFAULT NULL,
   PRIMARY KEY (`Supplier_ID`),
@@ -368,7 +368,8 @@ SET @saved_cs_client     = @@character_set_client;
  1 AS `Цена`,
  1 AS `Предпродажная_подготовка`,
  1 AS `Транспортная_подготовка`,
- 1 AS `Стоимость`*/;
+ 1 AS `Стоимость`,
+ 1 AS `Дата_сделки`*/;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -495,8 +496,8 @@ DELIMITER ;
 /*!50001 SET character_set_results     = utf8mb4 */;
 /*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `отчет_о_реализации` AS select distinct `s`.`Name` AS `Фирма`,`m`.`Model_name` AS `Наименование_автомобиля`,`pl`.`Price` AS `Цена`,round((`pl`.`Price` * 0.03),2) AS `Предпродажная_подготовка`,round((`pl`.`Price` * 0.05),2) AS `Транспортная_подготовка`,round((`pl`.`Price` * 1.08),2) AS `Стоимость` from (((((`suppliers` `s` join `supplieroffer` `so` on((`s`.`Supplier_ID` = `so`.`Supplier_ID`))) join `model` `m` on((`so`.`Model_ID` = `m`.`Model_ID`))) join `pricelist` `pl` on((`m`.`PriceList_ID` = `pl`.`PriceList_ID`))) join `modelsindeal` `mid` on((`so`.`Model_ID` = `mid`.`Model_ID`))) join `deal` `d` on((`mid`.`Deal_ID` = `d`.`Deal_ID`))) where (`d`.`OrderStatus` = true) order by `s`.`Name`,`m`.`Model_name` */;
+/*!50013 DEFINER=`root`@`%` SQL SECURITY DEFINER */
+/*!50001 VIEW `отчет_о_реализации` AS select distinct `s`.`Name` AS `Фирма`,`m`.`Model_name` AS `Наименование_автомобиля`,`pl`.`Price` AS `Цена`,round((`pl`.`Price` * 0.03),2) AS `Предпродажная_подготовка`,round((`pl`.`Price` * 0.05),2) AS `Транспортная_подготовка`,round((`pl`.`Price` * 1.08),2) AS `Стоимость`,`d`.`OrderDate` AS `Дата_сделки` from (((((`suppliers` `s` join `supplieroffer` `so` on((`s`.`Supplier_ID` = `so`.`Supplier_ID`))) join `model` `m` on((`so`.`Model_ID` = `m`.`Model_ID`))) join `pricelist` `pl` on((`m`.`PriceList_ID` = `pl`.`PriceList_ID`))) join `modelsindeal` `mid` on((`so`.`Model_ID` = `mid`.`Model_ID`))) join `deal` `d` on((`mid`.`Deal_ID` = `d`.`Deal_ID`))) where (`d`.`OrderStatus` = 1) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -510,4 +511,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-04-16 16:27:55
+-- Dump completed on 2026-04-17 14:26:42
