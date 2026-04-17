@@ -52,7 +52,7 @@ const CarModelsModule = {
                             <form id="modelForm">
                                 <div class="mb-2"><label>Модель *</label><input name="Model_name" class="form-control" value="${this.escape(data.Model_name)}" required></div>
                                 <div class="mb-2"><label>Цвет *</label><input name="Color" class="form-control" value="${this.escape(data.Color)}" required></div>
-                                <div class="mb-2"><label>Цена (из прайс-листа) *</label><select name="PriceList_ID" class="form-select">${priceSelect}</select></div>
+                                <div class="mb-2"><label>Цена, руб. *</label><select name="PriceList_ID" class="form-select">${priceSelect}</select></div>
                                 <div class="mb-2"><label>Мощность (л.с.)</label><input type="number" name="Horsepower" class="form-control" value="${data.Horsepower || ''}"></div>
                                 <div class="mb-2"><label>Вес (кг)</label><input type="number" name="Weight" class="form-control" value="${data.Weight || ''}"></div>
                                 <div class="mb-2"><label>КПП *</label><input name="Transmission" class="form-control" value="${this.escape(data.Transmission)}" required></div>

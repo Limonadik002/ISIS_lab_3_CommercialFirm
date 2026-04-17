@@ -54,7 +54,7 @@ const ReportModule = {
             if (!grouped[item.firm]) grouped[item.firm] = [];
             grouped[item.firm].push(item);
         });
-        let html = '<table class="table table-bordered"><thead class="table-dark"><tr><th>Наименование модели</th><th>Цена, у.е.</th><th>Предпродажная подготовка, у.е.</th><th>Транспортные издержки, у.е.</th><th>Стоимость, у.е.</th></thead><tbody>';
+        let html = '<table class="table table-bordered"><thead class="table-dark"><tr><th>Наименование модели</th><th>Цена, руб.</th><th>Предпродажная подготовка, руб.</th><th>Транспортные издержки, руб.</th><th>Стоимость, руб.</th></thead><tbody>';
         let grandTotal = 0;
         for (const [firm, items] of Object.entries(grouped)) {
             html += `<tr class="table-secondary"><td colspan="5"><strong>Фирма: ${this.escape(firm)}</strong></td></tr>`;

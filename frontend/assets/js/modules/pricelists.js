@@ -13,7 +13,7 @@ const PricelistsModule = {
     async loadTable() {
         const list = await API.pricelists.getAll();
         let html = `<table class="table table-bordered"><thead class="table-dark"><tr>
-            <th>Цена, у.е.</th><th>Модель</th><th>Действия</th>
+            <th>Цена, руб.</th><th>Модель</th><th>Действия</th>
         </tr></thead><tbody>`;
         for (const p of list) {
             html += `<tr>
