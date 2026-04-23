@@ -20,6 +20,7 @@ elseif ($method === 'GET' && isset($_GET['options']) && $_GET['options'] === 'mo
     sendJson(fetchAll("SELECT Model_ID, Model_name FROM model WHERE Deleted = 0"));
 }
 elseif ($method === 'GET' && isset($_GET['options']) && $_GET['options'] === 'suppliers') {
+    // Возвращаем список поставщиков с читаемым названием
     $sql = "SELECT Supplier_ID, Name AS Description FROM suppliers WHERE Deleted = 0";
     sendJson(fetchAll($sql));
 }
