@@ -13,12 +13,11 @@ const ClientsModule = {
 
     async loadTable() {
         const list = await API.clients.getAll();
-        let html = `<table class="table table-bordered"><thead class="table-dark"><tr>
-            <th>ID</th><th>Фамилия</th><th>Имя</th><th>Отчество</th><th>Телефон</th><th>Email</th><th>Действия</th>
-        </table></thead><tbody>`;
+        let html = `<table class="table table-bordered"><thead class="table-dark">
+            <th>Фамилия</th><th>Имя</th><th>Отчество</th><th>Телефон</th><th>Email</th><th>Действия</th>
+        </tr></thead><tbody>`;
         for (const c of list) {
             html += `<tr>
-                <td>${c.Client_ID}</td>
                 <td>${this.escape(c.LastName)}</td>
                 <td>${this.escape(c.FirstName)}</td>
                 <td>${this.escape(c.MiddleName || '—')}</td>
@@ -49,6 +48,7 @@ const ClientsModule = {
                             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                         </div>
                         <div class="modal-body">
+                            <div id="formError" class="alert alert-danger" style="display:none;"></div>
                             <form id="clientForm">
                                 <div class="mb-2"><label>Фамилия *</label><input name="LastName" class="form-control" value="${this.escape(data.LastName)}" required></div>
                                 <div class="mb-2"><label>Имя *</label><input name="FirstName" class="form-control" value="${this.escape(data.FirstName)}" required></div>
@@ -68,7 +68,11 @@ const ClientsModule = {
         document.getElementById('modalContainer').innerHTML = modalHtml;
         const modal = new bootstrap.Modal(document.getElementById('clientModal'));
         modal.show();
-        document.getElementById('saveBtn').onclick = async () => {
+
+        const errorDiv = document.getElementById('formError');
+        const saveBtn = document.getElementById('saveBtn');
+        saveBtn.onclick = async () => {
+            errorDiv.style.display = 'none';
             const form = document.getElementById('clientForm');
             const formData = {
                 LastName: form.LastName.value,
@@ -77,10 +81,15 @@ const ClientsModule = {
                 Phone: form.Phone.value,
                 Email: form.Email.value
             };
-            if (isEdit) await API.clients.update(id, formData);
-            else await API.clients.add(formData);
-            modal.hide();
-            await this.loadTable();
+            try {
+                if (isEdit) await API.clients.update(id, formData);
+                else await API.clients.add(formData);
+                modal.hide();
+                await this.loadTable();
+            } catch (err) {
+                errorDiv.style.display = 'block';
+                errorDiv.innerText = err.message;
+            }
         };
     },
 
@@ -93,6 +102,6 @@ const ClientsModule = {
 
     escape(str) {
         if (!str) return '';
-        return str.replace(/[&<>]/g, m => m === '&' ? '&amp;' : m === '<' ? '&lt;' : m === '>' ? '&gt;' : m);
+        return str.replace(/[&<>]/g, m => m === '&' ? '&amp;' : m === '<' ? '&lt;' : '&gt;');
     }
 };

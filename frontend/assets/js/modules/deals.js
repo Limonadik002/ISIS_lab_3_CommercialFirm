@@ -13,13 +13,9 @@ const DealsModule = {
 
     async loadTable() {
         const list = await API.deals.getAll();
-        let html = `<table class="table table-bordered"><thead class="table-dark">发展
-            <th>Клиент</th>
-            <th>Сотрудник</th>
-            <th>Статус</th>
-            <th>Дата</th>
-            <th>Действия</th>
-        </tr></thead><tbody>`;
+        let html = `<table class="table table-bordered"><thead class="table-dark">
+            <th>Клиент</th><th>Сотрудник</th><th>Статус</th><th>Дата</th><th>Действия</th>
+        <tr></thead><tbody>`;
         for (const d of list) {
             html += `<tr>
                 <td>${this.escape(d.ClientName)}</td>
@@ -44,19 +40,18 @@ const DealsModule = {
         let clients = [], employees = [];
 
         if (isEdit) data = await API.deals.get(id);
-        // Загружаем списки клиентов и сотрудников
-        clients = await API.deals.getClientOptions();
-        employees = await API.deals.getEmployeeOptions();
+        clients = await API.deals.getClientOptions();   // массив {Client_ID, Description}
+        employees = await API.deals.getEmployeeOptions(); // массив {Employee_ID, Description}
 
-        // Формируем option'ы для выпадающих списков
         const clientSelect = clients.map(c => 
             `<option value="${c.Client_ID}" ${data.Client_ID == c.Client_ID ? 'selected' : ''}>
-                ${this.escape(c.Name)}
+                ${this.escape(c.Description)}
             </option>`
         ).join('');
+
         const employeeSelect = employees.map(e => 
             `<option value="${e.Employee_ID}" ${data.Employee_ID == e.Employee_ID ? 'selected' : ''}>
-                ${this.escape(e.Name)}
+                ${this.escape(e.Description)}
             </option>`
         ).join('');
 
@@ -69,6 +64,7 @@ const DealsModule = {
                             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                         </div>
                         <div class="modal-body">
+                            <div id="formError" class="alert alert-danger" style="display:none;"></div>
                             <form id="dealForm">
                                 <div class="mb-2">
                                     <label>Клиент *</label>
@@ -104,7 +100,10 @@ const DealsModule = {
         const modal = new bootstrap.Modal(document.getElementById('dealModal'));
         modal.show();
 
-        document.getElementById('saveBtn').onclick = async () => {
+        const errorDiv = document.getElementById('formError');
+        const saveBtn = document.getElementById('saveBtn');
+        saveBtn.onclick = async () => {
+            errorDiv.style.display = 'none';
             const form = document.getElementById('dealForm');
             const formData = {
                 Client_ID: form.Client_ID.value,
@@ -112,13 +111,15 @@ const DealsModule = {
                 OrderStatus: form.OrderStatus.value,
                 OrderDate: form.OrderDate.value
             };
-            if (isEdit) {
-                await API.deals.update(id, formData);
-            } else {
-                await API.deals.add(formData);
+            try {
+                if (isEdit) await API.deals.update(id, formData);
+                else await API.deals.add(formData);
+                modal.hide();
+                await this.loadTable();
+            } catch (err) {
+                errorDiv.style.display = 'block';
+                errorDiv.innerText = err.message;
             }
-            modal.hide();
-            await this.loadTable();
         };
     },
 

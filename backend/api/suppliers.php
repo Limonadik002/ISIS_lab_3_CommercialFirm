@@ -12,10 +12,19 @@ if ($method === 'GET' && !$id) {
 } elseif ($method === 'POST') {
     $data = json_decode(file_get_contents('php://input'), true);
     validateRequired($data, ['Name', 'Address']);
+    validateNotEmpty($data['Name'], 'Название');
+    validateStringLength($data['Name'], 'Название', 100);
+    validateNotEmpty($data['Address'], 'Адрес');
+    validateStringLength($data['Address'], 'Адрес', 100);
     $res = execute("INSERT INTO suppliers (Name, Address) VALUES (?,?)", 'ss', [$data['Name'], $data['Address']]);
     sendJson(['id' => $res['insert_id'], 'message' => 'Created']);
 } elseif ($method === 'PUT' && $id) {
     $data = json_decode(file_get_contents('php://input'), true);
+    validateRequired($data, ['Name', 'Address']);
+    validateNotEmpty($data['Name'], 'Название');
+    validateStringLength($data['Name'], 'Название', 100);
+    validateNotEmpty($data['Address'], 'Адрес');
+    validateStringLength($data['Address'], 'Адрес', 100);
     execute("UPDATE suppliers SET Name=?, Address=? WHERE Supplier_ID=?", 'ssi', [$data['Name'], $data['Address'], $id]);
     sendJson(['message' => 'Updated']);
 } elseif ($method === 'DELETE' && $id) {

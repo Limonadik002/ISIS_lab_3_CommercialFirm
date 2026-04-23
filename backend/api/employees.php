@@ -12,6 +12,10 @@ if ($method === 'GET' && !$id) {
 } elseif ($method === 'POST') {
     $data = json_decode(file_get_contents('php://input'), true);
     validateRequired($data, ['LastName', 'FirstName', 'Phone']);
+    validateName($data['LastName'], 'Фамилия', true, 50);
+    validateName($data['FirstName'], 'Имя', true, 50);
+    validateName($data['MiddleName'] ?? '', 'Отчество', false, 50);
+    validatePhone($data['Phone']);
     $res = execute(
         "INSERT INTO employees (LastName, FirstName, MiddleName, Phone) VALUES (?,?,?,?)",
         'ssss',
@@ -20,6 +24,11 @@ if ($method === 'GET' && !$id) {
     sendJson(['id' => $res['insert_id'], 'message' => 'Created']);
 } elseif ($method === 'PUT' && $id) {
     $data = json_decode(file_get_contents('php://input'), true);
+    validateRequired($data, ['LastName', 'FirstName', 'Phone']);
+    validateName($data['LastName'], 'Фамилия', true, 50);
+    validateName($data['FirstName'], 'Имя', true, 50);
+    validateName($data['MiddleName'] ?? '', 'Отчество', false, 50);
+    validatePhone($data['Phone']);
     execute(
         "UPDATE employees SET LastName=?, FirstName=?, MiddleName=?, Phone=? WHERE Employee_ID=?",
         'ssssi',

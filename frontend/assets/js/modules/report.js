@@ -61,7 +61,7 @@ const ReportModule = {
 
         let html = `<table class="table table-bordered">
             <thead class="table-dark">
-                <tr><th>Наименование модели</th><th>Цена, у.е.</th><th>Предпродажная подготовка, у.е.</th><th>Транспортные издержки, у.е.</th><th>Стоимость, у.е.</th></tr>
+                <tr><th>Наименование модели</th><th>Цена</th><th>Предпродажная подготовка</th><th>Транспортные издержки</th><th>Стоимость</th></tr>
             </thead>
             <tbody>`;
         let grandTotal = 0;

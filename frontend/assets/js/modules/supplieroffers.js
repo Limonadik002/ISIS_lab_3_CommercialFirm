@@ -10,9 +10,10 @@ const SupplierOffersModule = {
         await this.loadTable();
         document.getElementById('addBtn').onclick = () => this.showForm();
     },
+
     async loadTable() {
         const list = await API.supplieroffers.getAll();
-        let html = `<table class="table table-bordered"><thead class="table-dark"><tr>
+        let html = `<table class="table table-bordered"><thead class="table-dark">
             <th>Модель</th><th>Поставщик</th><th>Действия</th>
         </tr></thead><tbody>`;
         for (const item of list) {
@@ -30,15 +31,28 @@ const SupplierOffersModule = {
         document.querySelectorAll('.editBtn').forEach(btn => btn.onclick = () => this.showForm(btn.dataset.id));
         document.querySelectorAll('.deleteBtn').forEach(btn => btn.onclick = () => this.deleteItem(btn.dataset.id));
     },
+
     async showForm(id = null) {
         const isEdit = !!id;
         let data = {};
         let models = [], suppliers = [];
+
         if (isEdit) data = await API.supplieroffers.get(id);
         models = await API.supplieroffers.getModelOptions();
         suppliers = await API.supplieroffers.getSupplierOptions();
-        const modelSelect = models.map(m => `<option value="${m.Model_ID}" ${data.Model_ID == m.Model_ID ? 'selected' : ''}>${this.escape(m.Model_name)}</option>`).join('');
-        const supplierSelect = suppliers.map(s => `<option value="${s.Supplier_ID}" ${data.Supplier_ID == s.Supplier_ID ? 'selected' : ''}>${this.escape(s.Name)}</option>`).join('');
+
+        const modelSelect = models.map(m => 
+            `<option value="${m.Model_ID}" ${data.Model_ID == m.Model_ID ? 'selected' : ''}>
+                ${this.escape(m.Model_name)}
+            </option>`
+        ).join('');
+
+        const supplierSelect = suppliers.map(s => 
+            `<option value="${s.Supplier_ID}" ${data.Supplier_ID == s.Supplier_ID ? 'selected' : ''}>
+                ${this.escape(s.Description)}
+            </option>`
+        ).join('');
+
         const modalHtml = `
             <div class="modal fade" id="offerModal" tabindex="-1">
                 <div class="modal-dialog">
@@ -48,9 +62,16 @@ const SupplierOffersModule = {
                             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                         </div>
                         <div class="modal-body">
+                            <div id="formError" class="alert alert-danger" style="display:none;"></div>
                             <form id="offerForm">
-                                <div class="mb-2"><label>Модель *</label><select name="Model_ID" class="form-select">${modelSelect}</select></div>
-                                <div class="mb-2"><label>Поставщик *</label><select name="Supplier_ID" class="form-select">${supplierSelect}</select></div>
+                                <div class="mb-2">
+                                    <label>Модель *</label>
+                                    <select name="Model_ID" class="form-select" required>${modelSelect}</select>
+                                </div>
+                                <div class="mb-2">
+                                    <label>Поставщик *</label>
+                                    <select name="Supplier_ID" class="form-select" required>${supplierSelect}</select>
+                                </div>
                             </form>
                         </div>
                         <div class="modal-footer">
@@ -64,23 +85,37 @@ const SupplierOffersModule = {
         document.getElementById('modalContainer').innerHTML = modalHtml;
         const modal = new bootstrap.Modal(document.getElementById('offerModal'));
         modal.show();
-        document.getElementById('saveBtn').onclick = async () => {
+
+        const errorDiv = document.getElementById('formError');
+        const saveBtn = document.getElementById('saveBtn');
+        saveBtn.onclick = async () => {
+            errorDiv.style.display = 'none';
             const form = document.getElementById('offerForm');
             const formData = {
                 Model_ID: form.Model_ID.value,
                 Supplier_ID: form.Supplier_ID.value
             };
-            if (isEdit) await API.supplieroffers.update(id, formData);
-            else await API.supplieroffers.add(formData);
-            modal.hide();
-            await this.loadTable();
+            try {
+                if (isEdit) await API.supplieroffers.update(id, formData);
+                else await API.supplieroffers.add(formData);
+                modal.hide();
+                await this.loadTable();
+            } catch (err) {
+                errorDiv.style.display = 'block';
+                errorDiv.innerText = err.message;
+            }
         };
     },
+
     async deleteItem(id) {
         if (confirm('Удалить предложение поставщика?')) {
             await API.supplieroffers.delete(id);
             await this.loadTable();
         }
     },
-    escape(str) { return !str ? '' : str.replace(/[&<>]/g, m => m === '&' ? '&amp;' : m === '<' ? '&lt;' : '&gt;'); }
+
+    escape(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, m => m === '&' ? '&amp;' : m === '<' ? '&lt;' : '&gt;');
+    }
 };

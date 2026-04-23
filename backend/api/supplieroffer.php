@@ -4,7 +4,7 @@ require_once __DIR__ . '/../config.php';
 $method = $_SERVER['REQUEST_METHOD'];
 $id = $_GET['id'] ?? null;
 
-if ($method === 'GET' && !$id) {
+if ($method === 'GET' && !$id && !isset($_GET['options'])) {
     $sql = "SELECT so.*, m.Model_name, s.Name AS SupplierName
             FROM supplieroffer so
             JOIN model m ON so.Model_ID = m.Model_ID
@@ -16,17 +16,21 @@ elseif ($method === 'GET' && $id) {
     $data = fetchOne("SELECT * FROM supplieroffer WHERE Offer_ID = ? AND Deleted = 0", 'i', [$id]);
     sendJson($data ?: ['error' => 'Not found'], $data ? 200 : 404);
 }
-// GET options for models
 elseif ($method === 'GET' && isset($_GET['options']) && $_GET['options'] === 'models') {
     sendJson(fetchAll("SELECT Model_ID, Model_name FROM model WHERE Deleted = 0"));
 }
-// GET options for suppliers
 elseif ($method === 'GET' && isset($_GET['options']) && $_GET['options'] === 'suppliers') {
-    sendJson(fetchAll("SELECT Supplier_ID, Name FROM suppliers WHERE Deleted = 0"));
+    // Возвращаем список поставщиков с читаемым названием
+    $sql = "SELECT Supplier_ID, Name AS Description FROM suppliers WHERE Deleted = 0";
+    sendJson(fetchAll($sql));
 }
 elseif ($method === 'POST') {
     $data = json_decode(file_get_contents('php://input'), true);
     validateRequired($data, ['Model_ID', 'Supplier_ID']);
+    validateInt($data['Model_ID'], 'Model_ID', 1);
+    validateInt($data['Supplier_ID'], 'Supplier_ID', 1);
+    validateForeignKey('model', 'Model_ID', $data['Model_ID'], 'Model_ID');
+    validateForeignKey('suppliers', 'Supplier_ID', $data['Supplier_ID'], 'Supplier_ID');
     $res = execute(
         "INSERT INTO supplieroffer (Model_ID, Supplier_ID) VALUES (?, ?)",
         'ii',
@@ -36,6 +40,11 @@ elseif ($method === 'POST') {
 }
 elseif ($method === 'PUT' && $id) {
     $data = json_decode(file_get_contents('php://input'), true);
+    validateRequired($data, ['Model_ID', 'Supplier_ID']);
+    validateInt($data['Model_ID'], 'Model_ID', 1);
+    validateInt($data['Supplier_ID'], 'Supplier_ID', 1);
+    validateForeignKey('model', 'Model_ID', $data['Model_ID'], 'Model_ID');
+    validateForeignKey('suppliers', 'Supplier_ID', $data['Supplier_ID'], 'Supplier_ID');
     execute(
         "UPDATE supplieroffer SET Model_ID=?, Supplier_ID=? WHERE Offer_ID=?",
         'iii',
