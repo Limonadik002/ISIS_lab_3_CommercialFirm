@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../config.php';
+$user = requireRole(['admin']);
 
 $method = $_SERVER['REQUEST_METHOD'];
 $id = $_GET['id'] ?? null;

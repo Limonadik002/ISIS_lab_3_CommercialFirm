@@ -79,5 +79,12 @@ const API = {
             if (month && year) url += `?month=${month}&year=${year}`;
             return request(url);
         }
-    }
+    },
+    admin: {
+    getUsers: () => request('auth/admin/users.php'),
+    approveUser: (userId) => request('auth/admin/users.php', 'PUT', {approve: true, user_id: userId}),
+    makeOperator: (userId) => request('auth/admin/users.php', 'PUT', {make_operator: true, user_id: userId}),
+    setRole: (userId, role) => request('auth/admin/users.php', 'PUT', {role: role, user_id: userId}),
+    revokeOperator: (userId) => request('auth/admin/users.php', 'PUT', {revoke: true, user_id: userId})
+}
 };

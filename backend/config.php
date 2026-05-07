@@ -188,4 +188,28 @@ function validateName($value, $fieldName, $required = true, $maxLength = 50) {
         }
     }
 }
+
+function getCurrentUser() {
+    if (session_status() === PHP_SESSION_NONE) session_start();
+    if (isset($_SESSION['user_id'])) {
+        global $conn;
+        $stmt = mysqli_prepare($conn, "SELECT u.*, r.name as role_name FROM users u JOIN roles r ON u.role_id = r.id WHERE u.id = ?");
+        mysqli_stmt_bind_param($stmt, 'i', $_SESSION['user_id']);
+        mysqli_stmt_execute($stmt);
+        $res = mysqli_stmt_get_result($stmt);
+        return mysqli_fetch_assoc($res);
+    }
+    return null;
+}
+
+function requireRole($allowedRoles = []) {
+    $user = getCurrentUser();
+    if (!$user) {
+        sendJson(['error' => 'Необходимо авторизоваться'], 401);
+    }
+    if (!empty($allowedRoles) && !in_array($user['role_name'], $allowedRoles)) {
+        sendJson(['error' => 'Недостаточно прав для выполнения действия'], 403);
+    }
+    return $user;
+}
 ?>
